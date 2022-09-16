@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Mekatronik.Models.Product>
+@using Mekatronik.Paging
+@using Mekatronik.MyExtensions
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Pager pager = new Pager();
+    int pageNo = 1;
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
+}
+<div id="divProductList">
+@*<h1><input type="button" class="btn btn-success" href="/Products/Create/" value="Create New" /></h1>
+<h1></h1>*@
+ <a class="btn btn-success" asp-area="" asp-controller="Products" asp-route-pg="@pageNo" asp-action="Create">Create New</a>
+
+<table class="table" >
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductImage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductCreateDate)
+            </th>
+          
+            <th>
+                @Html.DisplayNameFor(model => model.ProductStatus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                 <img src= "@Url.Content(@item.ProductImage)" class="img-fluid" style="width:30px; height:45px;" alt="Image" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductCode)
+            </td>
+            <td>
+               @item.ProductCreateDate.ToDMY()
+            </td>
+           
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductStatus)
+            </td>
+            <td>
+                <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.ProductID" asp-route-pg="@pageNo">Edit</a> 
+               @* <a asp-action="Details" asp-route-id="@item.ProductID">Details</a> |*@
+                <a  class="btn btn-danger" onclick="fnDeleteProducts(this,@pageNo)" data-id="@item.ProductID" >Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+    
+</table>
+ @await Html.PartialAsync("~/Views/Shared/_Pager.cshtml",pager)
+ </div>
